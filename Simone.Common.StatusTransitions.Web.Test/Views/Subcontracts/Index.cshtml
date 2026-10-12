@@ -34,6 +34,7 @@ else
                 <td class="text-right">@item.Amount.ToString("C")</td>
                 <td>
                     <a href="#" class="js-open-card text-decoration-none" data-id="@item.Id" title="Ver / mover">
+                    <transition-badge process-name="Mi Proceso" entity-id="@item.Id" />
                     </a>
                 </td>
             </tr>
@@ -51,6 +52,7 @@ else
 </div>
 
 @section Scripts {
+     <transition-buttons-script></transition-buttons-script>
     <script>
         (function () {
             var cardUrlBase = '@Url.Action("Card")';

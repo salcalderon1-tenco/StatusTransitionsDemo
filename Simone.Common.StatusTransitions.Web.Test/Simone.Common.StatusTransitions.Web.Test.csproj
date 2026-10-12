@@ -21,6 +21,8 @@
 
     <!-- NewtonsoftJson: required by the package controllers to bind transition JSON -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.12" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 
     <!-- Serilog: structured logging, aligned with the other Simon-e web hosts -->
     <PackageReference Include="Serilog" Version="4.4.0" />
@@ -36,7 +38,8 @@
     <PackageReference Include="Simone.Common.RabbitMQ" Version="6.5.8" />
     <PackageReference Include="Simone.Common.Security" Version="6.5.8" />
     <PackageReference Include="Simone.Common.Startup" Version="6.5.8" />
+    
 
-    <!-- <PackageReference Include="Simone.Common.StatusTransitions" Version="6.1.0-beta1" /> -->
+    <PackageReference Include="Simone.Common.StatusTransitions" Version="6.1.0-beta1" />
   </ItemGroup>
 </Project>

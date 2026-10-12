@@ -5,6 +5,8 @@ using Simone.Common.Abstractions.Services;
 using Simone.Common.Abstractions;
 using Simone.Common.StatusTransitions.Web.Test.Data;
 using Simone.Common.StatusTransitions.Web.Test.Models;
+using Simone.Common.StatusTransitions.Abstractions;
+using Simone.Common.StatusTransitions.Models;
 
 namespace Simone.Common.StatusTransitions.Web.Test.Controllers
 {
@@ -21,6 +23,7 @@ namespace Simone.Common.StatusTransitions.Web.Test.Controllers
     [Authorize(AuthenticationSchemes = IdentityConsts.DefaultAuthenticationSchemes)]
     public class SubcontractsController(
         AppDbContext context,
+        IExtendedProcessProvider processProvider, 
         IUserIdentity userIdentity,
         ILogger<SubcontractsController> logger) : Controller
     {
@@ -28,6 +31,10 @@ namespace Simone.Common.StatusTransitions.Web.Test.Controllers
         /// The current authenticated user's GUID, used as the author of the transitions.
         /// </summary>
         private Guid CurrentUserId => userIdentity.GetCurrentUserGuid();
+
+        // Transition service bound to the process, typed to the entity id (int)
+        private ITransitionService<int> Transitions
+            => processProvider.CreateTransitionService<int>("Mi Proceso");
 
         /// <summary>
         /// GET: /Subcontracts. Lists every subcontract, newest first. The current status badge is
@@ -63,6 +70,14 @@ namespace Simone.Common.StatusTransitions.Web.Test.Controllers
             context.Subcontracts.Add(subcontract);
             await context.SaveChangesAsync();
             logger.LogInformation("Subcontract {Id} created by user {UserId}", subcontract.Id, CurrentUserId);
+
+            // INITIAL transition: targetStatusId = null => the process' initial status.
+            var result = await Transitions.TryCreateTransition(
+                subcontract.Id, targetStatusId: null,
+                comment: "Entity created", userId: CurrentUserId);
+
+            if (result.Result != TransitionResults.Success)
+                logger.LogError("Initial transition for subcontract {Id} failed with result {Result}", subcontract.Id, result.Result);
 
             return RedirectToAction(nameof(Index));
         }

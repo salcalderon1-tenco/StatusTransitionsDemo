@@ -4,9 +4,33 @@ using Simone.Common.RabbitMQ.Extensions;
 using Simone.Common.Security.Extensions;
 using Simone.Common.StatusTransitions.Web.Test.Data;
 using Simone.Common.Startup;
+using Simone.Common.StatusTransitions.Extensors;
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectOptions>(
+    "OpenIdConnect",
+    options =>
+    {
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
+            {
+                if (sslPolicyErrors == System.Net.Security.SslPolicyErrors.None)
+                    return true;
+
+                // Acepta certificados emitidos para *.tenco.dev o en desarrollo
+                if (certificate != null && (certificate.Subject.Contains("tenco.dev") || builder.Environment.IsDevelopment()))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        };
+
+        options.Backchannel = new HttpClient(handler);
+    });
 
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
@@ -22,6 +46,10 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddRabbitMQ(builder.Configuration);
 
 builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");
+builder.Services.AddStatusTransitions<AppDbContext>(options =>
+{
+    options.PolicyBuilder = policy => policy.RequireAuthenticatedUser();
+});
 
 
 var app = builder.Build();
@@ -37,6 +65,8 @@ app.UseRouting();
 app.UseCookiePolicy();
 
 app.UseSimoneAuthorization();
+
+app.UseStatusTransitions();
 
 app.UseLocalization();
 
