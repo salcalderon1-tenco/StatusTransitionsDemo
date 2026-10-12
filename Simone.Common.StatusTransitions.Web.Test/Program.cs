@@ -44,8 +44,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Subcontracts}/{action=Index}/{id?}");
 
-using (var scope = app.Services.CreateScope())
+if (!EF.IsDesignTime)
 {
+    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
