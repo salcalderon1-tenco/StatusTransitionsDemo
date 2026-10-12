@@ -1,0 +1,33 @@
+@model SubcontractDetailsViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title d-flex align-items-center" style="gap:.5rem;">
+        @Model.Subcontract.Title
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="d-flex justify-content-end mb-3">
+        </transition-buttons>
+    </div>
+
+    <dl class="row mb-0">
+        <dt class="col-sm-4">Contratista</dt>
+        <dd class="col-sm-8">@Model.Subcontract.Contractor</dd>
+
+        <dt class="col-sm-4">Monto</dt>
+        <dd class="col-sm-8">@Model.Subcontract.Amount.ToString("C")</dd>
+
+        <dt class="col-sm-4">Creado</dt>
+        <dd class="col-sm-8">@Model.Subcontract.CreatedAt.ToLocalTime().ToString("g")</dd>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Subcontract.Description))
+        {
+            <dt class="col-sm-4">Descripción</dt>
+            <dd class="col-sm-8">@Model.Subcontract.Description</dd>
+        }
+    </dl>
+</div>

@@ -1,0 +1,71 @@
+@model IEnumerable<Subcontract>
+@{
+    ViewData["Title"] = "Subcontratos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Subcontratos</h1>
+    <a class="btn btn-primary" asp-action="Create">Nuevo subcontrato</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No hay subcontratos todavía. Crea el primero.</div>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Título</th>
+                <th>Contratista</th>
+                <th class="text-right">Monto</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Title</td>
+                <td>@item.Contractor</td>
+                <td class="text-right">@item.Amount.ToString("C")</td>
+                <td>
+                    <a href="#" class="js-open-card text-decoration-none" data-id="@item.Id" title="Ver / mover">
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<div class="modal fade" id="subcontractModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content" id="subcontractModalContent">
+            <div class="modal-body text-center text-muted py-5">Cargando…</div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var cardUrlBase = '@Url.Action("Card")';
+
+            $(document).on('click', '.js-open-card', function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                $('#subcontractModalContent').html('<div class="modal-body text-center text-muted py-5">Cargando…</div>');
+                $('#subcontractModal').modal('show');
+                $.get(cardUrlBase + '/' + id)
+                    .done(function (html) { $('#subcontractModalContent').html(html); })
+                    .fail(function () { $('#subcontractModalContent').html('<div class="modal-body text-danger py-4">No se pudo cargar el subcontrato.</div>'); });
+            });
+
+            $('#subcontractModal').on('hidden.bs.modal', function () { location.reload(); });
+        })();
+    </script>
+}

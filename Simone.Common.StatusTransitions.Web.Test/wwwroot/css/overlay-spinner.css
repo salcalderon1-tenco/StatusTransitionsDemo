@@ -1,0 +1,82 @@
+﻿@charset "UTF-8";
+/* -------------------------------------------------------
+   overlay-spinner.js styles
+---------------------------------------------------------*/
+div.overlay-spinner {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    z-index: 9999;
+}
+
+    div.overlay-spinner.fixed-overlay {
+        position: fixed !important;
+    }
+
+    div.overlay-spinner > div.simone-overlay-spinner,
+    div.overlay-spinner > div.simone-overlay-spinner > span {
+        width: 100%;
+        text-align: center;
+        align-self: center;
+    }
+
+div.hidden-overlay {
+    display: none;
+}
+
+.simone-spinner {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    margin: 100px auto;
+}
+
+.double-bounce1, .double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #1C87CB;
+    background-image: url('../images/tenco-logo-mini-white.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.skin-red .double-bounce1, .skin-red .double-bounce2 {
+    background-color: #c81c1c;
+}
+
+.double-bounce2 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+    0%, 100% {
+        -webkit-transform: scale(0.0)
+    }
+
+    50% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes sk-bounce {
+    0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    }
+
+    50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
+}

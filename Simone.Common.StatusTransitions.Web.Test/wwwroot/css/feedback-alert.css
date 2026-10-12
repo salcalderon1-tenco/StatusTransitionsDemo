@@ -1,0 +1,14 @@
+﻿/* -------------------------------------------------------
+   FeedbackAlert styles
+---------------------------------------------------------*/
+#feedback-alert {
+    word-break: break-all;
+}
+
+.feedback-alert__absolute {
+    width: 60%;
+    z-index: 9999;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
